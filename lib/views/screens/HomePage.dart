@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:voting_app/Helper/AuthHelper.dart';
+import 'package:voting_app/Helper/firestore_helper.dart';
 import 'package:voting_app/views/Assest/colorsAssets.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   int totalVoteBJP = 0;
   int totalVoteCongress = 0;
   int totalVoteAAP = 0;
+  int totalVotes = 0;
 
   bool bjpBool = false;
   bool congressBool = false;
@@ -83,21 +85,23 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 30,
-                      width: 50,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Text(
-                        "$totalVoteBJP",
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16),
-                      ),
-                    ),
+                    (general && bjpBool == false)
+                        ? Container()
+                        : Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Text(
+                              "$totalVoteBJP",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                            ),
+                          ),
                     const SizedBox(
                       width: 36,
                     ),
@@ -112,22 +116,32 @@ class _HomePageState extends State<HomePage> {
                               if (bjpBool) {
                                 general = true;
                               }
+
+                              FireStoreHelper.fireStoreHelper.SendVotes(
+                                  bjp: totalVoteBJP,
+                                  cong: totalVoteCongress,
+                                  aap: totalVoteAAP,
+                                  total: totalVotes,
+                                  voteId: AuthHelper
+                                      .authHelper.googleSignIn.currentUser!.id);
                             },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 30,
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: const Text(
-                                "Vote",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16),
-                              ),
-                            ),
+                            child: (general)
+                                ? Container()
+                                : Container(
+                                    alignment: Alignment.center,
+                                    height: 30,
+                                    width: 50,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    child: const Text(
+                                      "Vote",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                  ),
                           ),
                   ],
                 ),
@@ -150,21 +164,23 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 30,
-                      width: 50,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Text(
-                        "$totalVoteCongress",
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16),
-                      ),
-                    ),
+                    (general && congressBool == false)
+                        ? Container()
+                        : Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Text(
+                              "$totalVoteCongress",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                            ),
+                          ),
                     Gap(20),
                     (congressBool == true)
                         ? Center(child: Container())
@@ -174,6 +190,9 @@ class _HomePageState extends State<HomePage> {
                                 totalVoteCongress++;
                                 congressBool = true;
                               });
+                              if (congressBool) {
+                                general = true;
+                              }
                             },
                             child: (general)
                                 ? Container()
@@ -214,21 +233,23 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 30,
-                      width: 50,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Text(
-                        "$totalVoteAAP",
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16),
-                      ),
-                    ),
+                    (general && aapBool == false)
+                        ? Container()
+                        : Container(
+                            alignment: Alignment.center,
+                            height: 30,
+                            width: 50,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Text(
+                              "$totalVoteAAP",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                            ),
+                          ),
                     Gap(20),
                     (aapBool == true)
                         ? Center(child: Container())
@@ -238,22 +259,27 @@ class _HomePageState extends State<HomePage> {
                                 totalVoteAAP++;
                                 aapBool = true;
                               });
+                              if (aapBool) {
+                                general = true;
+                              }
                             },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 30,
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: const Text(
-                                "Vote",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16),
-                              ),
-                            ),
+                            child: (general)
+                                ? Container()
+                                : Container(
+                                    alignment: Alignment.center,
+                                    height: 30,
+                                    width: 50,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    child: const Text(
+                                      "Vote",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                  ),
                           ),
                   ],
                 ),
